@@ -22,7 +22,7 @@ while (true)
   Console.WriteLine("4. Display Post");
   var choice = Console.ReadLine();
 
-  
+
   if (choice == "1")
   {
 
@@ -42,8 +42,8 @@ while (true)
     Console.Write("Enter a name for a new Blog: ");
     var name = Console.ReadLine();
     var blog = new Blog { Name = name };
-    
-    
+
+
     db.AddBlog(blog);
     logger.Info("Blog added - {name}", name);
     Console.WriteLine($"Blog '{name} added successfully.");
@@ -52,37 +52,69 @@ while (true)
   else if (choice == "3")
   {
     if (blogs.Count == 0)
-        {
-            Console.WriteLine("No blogs available. Add a blog first pretty please.");
-            continue;
-        }
-        Console.WriteLine($"Select the blog ID to post to:");
-        foreach (var blog in blogs)
-        {
-          Console.WriteLine($"{blog.BlogId}. {blog.Name}");
-        }
+    {
+      Console.WriteLine("No blogs available. Add a blog first pretty please.");
+      continue;
+    }
+    Console.WriteLine($"Select the blog ID to post to:");
+    foreach (var blog in blogs)
+    {
+      Console.WriteLine($"{blog.BlogId}. {blog.Name}");
+    }
 
-        if (!int.TryParse(Console.ReadLine(), out int blogId) || blogs.Find(b => b.BlogId == blogId) == null)
-        {
-          Console.WriteLine("Invalid blog ID. Please try again.");
-          continue;
-        }
+    if (!int.TryParse(Console.ReadLine(), out int blogId) || blogs.Find(b => b.BlogId == blogId) == null)
+    {
+      Console.WriteLine("Invalid blog ID. Please try again.");
+      continue;
+    }
 
-        Console.Write("Enter post title: ");
-        var title = Console.ReadLine();
-        Console.Write("Enter post content: ");
-        var content = Console.ReadLine();
-    
-        var post = new Post { PostId = posts.Count + 1, Title = title, Content = content, BlogId = blogId};
-        posts.Add(post);
-        logger.Info("Post added to blog ID {blogId} - {title}", blogId, title);
-        Console.WriteLine("Post added successfully.");
+    Console.Write("Enter post title: ");
+    var title = Console.ReadLine();
+    Console.Write("Enter post content: ");
+    var content = Console.ReadLine();
+
+    var post = new Post { PostId = posts.Count + 1, Title = title, Content = content, BlogId = blogId };
+    posts.Add(post);
+    logger.Info("Post added to blog ID {blogId} - {title}", blogId, title);
+    Console.WriteLine("Post added successfully.");
   }
 
-  else if (choice == "4") 
+  else if (choice == "4")
   {
+    if (blogs.Count == 0)
+    {
+      Console.WriteLine("No blogs available. Add a blog first.");
+      continue;
+    }
 
+    Console.WriteLine("Select the blog ID to view posts:");
+    foreach (var blog in blogs)
+    {
+      Console.WriteLine($"{blog.BlogId}. {blog.Name}");
+    }
+
+    if (!int.TryParse(Console.ReadLine(), out int blogId) || blogs.Find(b => b.BlogId == blogId) == null)
+    {
+      Console.WriteLine("Invalid blog ID. Please try again.");
+      continue;
+    }
+
+    var blogPosts = posts.FindAll(p => p.BlogId == blogId);
+    if (blogPosts.Count == 0)
+    {
+      Console.WriteLine("No posts found for this blog.");
+    }
+    else
+    {
+      Console.WriteLine($"Blog has {blogPosts.Count} posts:");
+      foreach (var post in blogPosts)
+      {
+        Console.WriteLine($"Blog: {blogs.Find(b => b.BlogId == post.BlogId)?.Name}, Title: {post.Title}, Content: {post.Content}");
+      }
+    }
+  }
+  else
+  {
+    Console.WriteLine("Invalid choice. Please enter a valid option.");
   }
 }
-
-logger.Info("Program ended");
