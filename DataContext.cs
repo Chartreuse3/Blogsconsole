@@ -15,6 +15,5 @@ public class DataContext : DbContext
             .AddJsonFile($"appsettings.json");
     var config = configuration.Build();
     optionsBuilder.UseSqlServer(@config["Blogs:ConnectionString"]);
-    optionsBuilder.UseSqlServer(@"Server=bitsql.wctc.edu;Database=Blogs_22_WSE;User ID=weft;Password=000588226");
   }
 }
